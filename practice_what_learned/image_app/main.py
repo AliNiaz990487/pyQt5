@@ -21,7 +21,7 @@ class ImageDisplayApp(QMainWindow):
 
     def browse_image(self):
         fileDialog = QFileDialog()
-        self.filesPath, _ = fileDialog.getOpenFileNames(self, 'Open Image File', '', 'Images (*.png *.jpg *.jpeg *.bmp *.gif)')
+        self.filesPath, _ = fileDialog.getOpenFileNames(self, 'Open Image File', '', 'images (*.png *.jpg *.jpeg *.bmp *.gif)')
 
         if not self.__validate_paths():
             self.imageLabel.setText("Please select only images")
