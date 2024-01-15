@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtCore import Qt
+
+from jpeg import RawToJpeg
 from constants import PLACEHOLDER_IMAGE
 
 def calculate_aspect(width: int, height: int) -> str:
@@ -22,6 +24,7 @@ class Image:
         
         self.window = window
         self.imageIndex = None
+        self.primaryLabelHeight = self.window.primaryLabel.height()
         self.secondaryLabelWidth = self.window.secondaryLabel.width()
         self.secondaryLabelHeight = self.window.secondaryLabel.height()
         self.placeholderImage = QPixmap(str(PLACEHOLDER_IMAGE))
@@ -36,12 +39,12 @@ class Image:
         self.window.secondaryLabel.setPixmap(self.placeholderImage)
         
 
-    
     def browse(self):
         fileDialog = QFileDialog()
         self.filesPath, _ = fileDialog.getOpenFileNames(
             self.window, 
-            "Open Image Files",
+            "Open RAW Images",
+            filter=r"*.CR2"
         )
         if not len(self.filesPath):
             return
@@ -52,11 +55,13 @@ class Image:
         self.window.set_count(self.window.selectedCount, f"{len(self.filesPath)}")
 
     def set_image_on_labels(self, index: int = -1):
-        image = QPixmap(self.filesPath[index])
-        self.window.primaryLabel.setPixmap(image)
-
-        image = image.scaledToHeight(self.secondaryLabelHeight)
-        self.window.secondaryLabel.setPixmap(image)
+        jpeg = RawToJpeg(self.filesPath[index]).convert_to_jpeg()
+        image = QPixmap(jpeg)
+        
+        pl = self.window.primaryLabel
+        sl = self.window.secondaryLabel
+        pl.setPixmap(image.scaled(pl.size(), aspectRatioMode=True))
+        sl.setPixmap(image.scaled(sl.size(), aspectRatioMode=True))
 
     def next_image(self):
         if self.imageIndex is None:
