@@ -17,3 +17,4 @@ STACK = 2
 
 # cached
 CACHED = pathlib.Path(__file__).parent/"cached"
+JPEG_CACHED = pathlib.Path(__file__).parent/"cached/jpeg"
