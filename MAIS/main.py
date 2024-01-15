@@ -6,6 +6,7 @@ from PyQt5.QtGui import QKeySequence
 from PyQt5 import uic
 
 from images import Image
+from processinig import StartProcessing
 from constants import (
     ALIGN, BLACKED, COMPRESS, GRAYED, STACK, 
     UI, VISIBLE_INDICATOR, INVISIBLE_INDICATOR
@@ -17,6 +18,7 @@ class MainWindow(QMainWindow):
         uic.loadUi(UI, self)
         
         self.image = Image(self)
+        self.startProcessing = StartProcessing(self)
         self.secondaryLabel.setMargin(8)
         self.primaryLabel.setMargin(10)
 
@@ -45,6 +47,7 @@ class MainWindow(QMainWindow):
         self.browseBtn.clicked.connect(self.image.browse)
         self.nextImage.clicked.connect(self.image.next_image)
         self.previousImage.clicked.connect(self.image.previous_image)
+        self.startProcessingBtn.clicked.connect(self.startProcessing.start_processing)
 
         # keyboard shortcuts
         QShortcut(QKeySequence("Shift+Left"), self)\
