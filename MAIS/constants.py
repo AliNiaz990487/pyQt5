@@ -15,6 +15,9 @@ ALIGN = 0
 COMPRESS = 1
 STACK = 2  
 
+# compress indexes
+JPEG = 2
+
 # cached
-CACHED = pathlib.Path(__file__).parent/"cached"
-JPEG_CACHED = pathlib.Path(__file__).parent/"cached/jpeg"
+CACHED_DIR = pathlib.Path(__file__).parent/"cached"
+JPEG_CACHED_DIR = CACHED_DIR/"jpeg"
