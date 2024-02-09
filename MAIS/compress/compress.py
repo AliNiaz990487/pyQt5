@@ -1,6 +1,8 @@
+from PIL import Image
 import os
 
 from caching import Caching
+from constants import JPEG_CACHED_DIR
 
 class Compress:
     def __init__(
@@ -31,3 +33,86 @@ class Compress:
     
     def _do_conversion(self):
         raise NotImplementedError("should be implemented by child classes")
+
+
+class RawToJpeg(Compress):
+    def __init__(self, rawImagePath, jpegImagePath = None, useCache = True):
+        if jpegImagePath is None:
+            jpegImagePath = JPEG_CACHED_DIR
+        
+        CACHED_FILE = "jpeg_caching.json"
+        super().__init__(JPEG_CACHED_DIR, CACHED_FILE, rawImagePath, jpegImagePath, ".jpg")
+        self.rawImagePath = rawImagePath
+        self.jpegImagePath = jpegImagePath
+        self.useCache = useCache
+
+    def convert_to_jpeg(self):
+        # Check if the converted image is already in the cache
+        if self.caching.cached() and self.useCache:
+            print(f"Using cached JPEG for {self.rawImagePath}")
+            return self.cache[self.rawImagePath]
+
+        # If not in the cache, convert the raw image to JPEG
+        self._do_conversion()
+
+        if self.useCache:
+            # Store the converted image path in the cache
+            self.caching.store_cache()
+
+        return self.jpegImagePath
+
+    def _do_conversion(self):
+        print("converting to jpeg...")
+        rawImage = Image.open(self.rawImagePath)
+
+        self.jpegImagePath = self.cancate_compress_name(self.jpegImagePath, self.rawImagePath)
+        rawImage.save(self.jpegImagePath, 'JPEG')
+
+
+class RawToPNG:
+    def __init__(self, rawImagePath, pngImagePath):
+
+        self.rawImagePath = rawImagePath
+        self.pngImagePath = pngImagePath
+
+    def convert_to_png(self):
+        self._do_conversion()
+
+        return self.pngImagePath
+
+    def _do_conversion(self):
+        print("converting to png...")
+        rawImage = Image.open(self.rawImagePath)
+
+        pngImageName = os.path.split(self.rawImagePath)[-1]
+        pngImageName = os.path.splitext(pngImageName)[0] + ".png"
+        self.pngImagePath = f"{self.pngImagePath}/{pngImageName}"
+
+        rawImage.save(self.pngImagePath, 'PNG')
+
+
+class RawtoGIF:
+    def __init__(self, rawPaths, compressDirectory):
+        print("#"*100)
+        self.jpegPaths = [
+            RawToJpeg(rawPath).convert_to_jpeg()
+            for rawPath in rawPaths
+        ]
+        self.compressDirectory = compressDirectory
+    
+    def convert_to_gif(self):
+        frames = [Image.open(path) for path in self.jpegPaths]
+        for i, frame in enumerate(frames):
+            x, y = frame.size
+            frames[i] = frames[i].resize([x//4, y//4])
+        frameOne = frames[0]
+
+        
+        gifName = os.path.split(self.jpegPaths[0])[-1]
+        gifName = os.path.splitext(gifName)[0] + ".gif"
+
+        self.compressDirectory = f"{self.compressDirectory}/{gifName}"
+
+        frameOne.save(self.compressDirectory, "GIF", optimize=True, save_all=True, append_images=frames, duration=100, loop=0)
+
+        return self.compressDirectory
