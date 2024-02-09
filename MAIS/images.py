@@ -1,8 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
-from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
 
-from compress.jpeg import RawToJpeg
+from compress.compress import RawToJpeg
 from constants import PLACEHOLDER_IMAGE
 
 def calculate_aspect(width: int, height: int) -> str:
