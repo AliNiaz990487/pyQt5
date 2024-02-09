@@ -3,3 +3,4 @@ example.py
 *.json
 raw/
 tiff/
+MAIS/cached
