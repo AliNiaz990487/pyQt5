@@ -16,7 +16,9 @@ COMPRESS = 1
 STACK = 2  
 
 # compress indexes
-JPEG = 2
+JPEG = 0
+PNG = 1
+GIF = 2
 
 # cached
 CACHED_DIR = pathlib.Path(__file__).parent/"cached"
