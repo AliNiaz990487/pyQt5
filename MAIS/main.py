@@ -14,21 +14,26 @@ from constants import (
 
 class MainWindow(QMainWindow):
     def __init__(self, **kwargs):
+        """
+        The class defines main window of the application.
+        """
         super().__init__(**kwargs)
-        uic.loadUi(UI, self)
+        uic.loadUi(UI, self) # load UI
         
         self.image = Image(self)
-        self.startProcessing = StartProcessing(self)
+        self.startProcessing = StartProcessing(self, self.image)
         self.secondaryLabel.setMargin(8)
         self.primaryLabel.setMargin(10)
 
         def task_selection():
+            """Select a task from the drop down list."""
             def hide_unnecessary():
                 self.stackAlgorithms.hide()
                 self.compressAlgorithms.hide()
                 self.algorithmsLabel.setStyleSheet(GRAYED)
 
             def show_on_selection(index: int):
+                """Show only selected algorithm based on selected task, and remove others."""
                 hide_unnecessary()
                 if index == COMPRESS:
                     self.compressAlgorithms.show()
@@ -44,6 +49,7 @@ class MainWindow(QMainWindow):
 
         task_selection()
 
+        # buttons functionalities
         self.browseBtn.clicked.connect(self.image.browse)
         self.nextImage.clicked.connect(self.image.next_image)
         self.previousImage.clicked.connect(self.image.previous_image)
@@ -85,11 +91,9 @@ class MainWindow(QMainWindow):
 
 
 app = QApplication(sys.argv)
-mainWindow = MainWindow()
-
-QComboBox().currentIndex
+mainWindow = MainWindow() # instantiate the app
 
 
-mainWindow.show()
+mainWindow.show() # show the main window
 sys.exit(app.exec_())
 
