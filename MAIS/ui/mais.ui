@@ -278,22 +278,17 @@
              </property>
              <item>
               <property name="text">
-               <string>Better Portable Graphics (BPG)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Graphics Interchange Format (GIF)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
                <string>Joint Photographic Experts Group (JPEG)</string>
               </property>
              </item>
              <item>
               <property name="text">
                <string>Portable Network Graphics (PNG)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Graphics Interchange Format (GIF)</string>
               </property>
              </item>
             </widget>
