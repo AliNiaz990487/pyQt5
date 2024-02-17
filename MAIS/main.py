@@ -48,6 +48,7 @@ class MainWindow(QMainWindow):
             self.taskSelection.currentIndexChanged.connect(show_on_selection)
 
         task_selection()
+        self.processStatusBar.hide()
 
         # buttons functionalities
         self.browseBtn.clicked.connect(self.image.browse)
