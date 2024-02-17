@@ -219,52 +219,7 @@
              </property>
              <item>
               <property name="text">
-               <string>Cosine Similarity</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Euclidean Distance</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Histogram Comparison</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Jaccard Index</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Mean Squared Error</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Peak Signal-to-Noise Ratio</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Structural Similarity</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sum of Absolute Difference</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Visual Information Fidelity</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Wasserstein Distance</string>
+               <string>Median</string>
               </property>
              </item>
             </widget>
@@ -278,17 +233,17 @@
              </property>
              <item>
               <property name="text">
-               <string>Joint Photographic Experts Group (JPEG)</string>
+               <string>JPEG</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Portable Network Graphics (PNG)</string>
+               <string>PNG</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Graphics Interchange Format (GIF)</string>
+               <string>GIF</string>
               </property>
              </item>
             </widget>
@@ -685,28 +640,46 @@ color: rgba(255, 0, 0, 0)</string>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="primaryLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>1</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="primaryLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);
 border-radius: 10px;
 border: 5px solid rgb(222, 221, 218);</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap>../../../../../../Downloads/astro.png</pixmap>
-        </property>
-        <property name="scaledContents">
-         <bool>true</bool>
-        </property>
-       </widget>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>../../../../../../Downloads/astro.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QLabel" name="imageName">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="processStatusBar">
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
