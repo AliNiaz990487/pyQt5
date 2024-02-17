@@ -70,10 +70,11 @@ class RawToJpeg(Compress):
 
 
 class RawToPNG:
-    def __init__(self, rawImagePath, pngImagePath):
+    def __init__(self, rawImagePath, pngImagePath, processStatusBar):
 
         self.rawImagePath = rawImagePath
         self.pngImagePath = pngImagePath
+        self.processStatusBar = processStatusBar
 
     def convert_to_png(self):
         self._do_conversion()
@@ -82,6 +83,8 @@ class RawToPNG:
 
     def _do_conversion(self):
         print("converting to png...")
+        self.processStatusBar.show()
+        self.processStatusBar.setValue(50)
         rawImage = Image.open(self.rawImagePath)
 
         pngImageName = os.path.split(self.rawImagePath)[-1]
@@ -89,19 +92,28 @@ class RawToPNG:
         self.pngImagePath = f"{self.pngImagePath}/{pngImageName}"
 
         rawImage.save(self.pngImagePath, 'PNG')
+        self.processStatusBar.setValue(100)
+        self.processStatusBar.hide()
 
 
 class RawtoGIF:
-    def __init__(self, rawPaths, compressDirectory):
+    def __init__(self, rawPaths, compressDirectory, progressStatusBar):
         print("#"*100)
         self.jpegPaths = [
             RawToJpeg(rawPath).convert_to_jpeg()
             for rawPath in rawPaths
         ]
         self.compressDirectory = compressDirectory
+        self.progressStatusBar = progressStatusBar
     
     def convert_to_gif(self):
-        frames = [Image.open(path) for path in self.jpegPaths]
+        self.progressStatusBar.show()
+
+        def open_image_update_progress(path, i):
+            self.progressStatusBar.setValue(((i+1)*100)//50)
+            return Image.open(path)
+
+        frames = [open_image_update_progress(path, i) for i, path in enumerate(self.jpegPaths)]
         for i, frame in enumerate(frames):
             x, y = frame.size
             frames[i] = frames[i].resize([x//4, y//4])
@@ -114,5 +126,6 @@ class RawtoGIF:
         self.compressDirectory = f"{self.compressDirectory}/{gifName}"
 
         frameOne.save(self.compressDirectory, "GIF", optimize=True, save_all=True, append_images=frames, duration=100, loop=0)
-
+        self.progressStatusBar.setValue(100)
+        self.progressStatusBar.hide()
         return self.compressDirectory
