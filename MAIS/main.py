@@ -1,12 +1,12 @@
 import sys
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QComboBox, QShortcut, QLabel
+    QApplication, QMainWindow, QShortcut, QLabel
 )
 from PyQt5.QtGui import QKeySequence
 from PyQt5 import uic
 
 from images import Image
-from processinig import StartProcessing
+from MAIS.processing import StartProcessing
 from constants import (
     ALIGN, BLACKED, COMPRESS, GRAYED, STACK, 
     UI, VISIBLE_INDICATOR, INVISIBLE_INDICATOR
