@@ -1,3 +1,4 @@
+import os
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtGui import QPixmap
 
@@ -52,7 +53,7 @@ class Image:
         self.filesPath, _ = fileDialog.getOpenFileNames(
             self.window, 
             "Open RAW Images",
-            filter=r"*.CR2"
+            filter=r"*.CR2 , *.tif"
         )
         if not self.filesPath:
             return
@@ -69,8 +70,10 @@ class Image:
         
         pl = self.window.primaryLabel
         sl = self.window.secondaryLabel
+        imageName = os.path.split(self.filesPath[index])[-1]
         pl.setPixmap(image.scaled(pl.size(), aspectRatioMode=True))
         sl.setPixmap(image.scaled(sl.size(), aspectRatioMode=True))
+        self.window.imageName.setText(imageName)
 
     def next_image(self):
         """Proceed to next image, increase count and responsible to check for reach end."""
