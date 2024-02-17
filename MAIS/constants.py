@@ -20,6 +20,10 @@ JPEG = 0
 PNG = 1
 GIF = 2
 
+# stack indexes
+MEDIAN = 0
+
 # cached
 CACHED_DIR = pathlib.Path(__file__).parent/"cached"
 JPEG_CACHED_DIR = CACHED_DIR/"jpeg"
+TIFF_CACHED_DIR = CACHED_DIR/"tiff"
