@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtGui import QPixmap
 
 from compress.compress import RawToJpeg
-from constants import PLACEHOLDER_IMAGE
+from constants import PLACEHOLDER_IMAGE, STACK
 
 def calculate_aspect(width: int, height: int) -> str:
     def gcd(a, b):
@@ -50,10 +50,13 @@ class Image:
         """Opens up browse dialog to browse for images."""
         fileDialog = QFileDialog()
         self.clear_previous()
+
+        taskIndex = self.window.taskSelection.currentIndex()
+        
         self.filesPath, _ = fileDialog.getOpenFileNames(
             self.window, 
             "Open RAW Images",
-            filter=r"*.CR2 , *.tif"
+            filter=r"*.tif" if taskIndex == STACK else r"*.CR2"
         )
         if not self.filesPath:
             return
