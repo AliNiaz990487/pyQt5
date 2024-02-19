@@ -70,11 +70,11 @@ class RawToJpeg(Compress):
 
 
 class RawToPNG:
-    def __init__(self, rawImagePath, pngImagePath, processStatusBar):
+    def __init__(self, rawImagePath, pngImagePath, progressed):
 
         self.rawImagePath = rawImagePath
         self.pngImagePath = pngImagePath
-        self.processStatusBar = processStatusBar
+        self.progressed = progressed
 
     def convert_to_png(self):
         self._do_conversion()
@@ -83,34 +83,33 @@ class RawToPNG:
 
     def _do_conversion(self):
         print("converting to png...")
-        self.processStatusBar.show()
-        self.processStatusBar.setValue(50)
         rawImage = Image.open(self.rawImagePath)
+        self.progressed.emit(50)
 
         pngImageName = os.path.split(self.rawImagePath)[-1]
         pngImageName = os.path.splitext(pngImageName)[0] + ".png"
         self.pngImagePath = f"{self.pngImagePath}/{pngImageName}"
 
         rawImage.save(self.pngImagePath, 'PNG')
-        self.processStatusBar.setValue(100)
-        self.processStatusBar.hide()
+        self.progressed.emit(100)
+
+    
 
 
 class RawtoGIF:
-    def __init__(self, rawPaths, compressDirectory, progressStatusBar):
+    def __init__(self, rawPaths, compressDirectory, progressed):
         print("#"*100)
         self.jpegPaths = [
             RawToJpeg(rawPath).convert_to_jpeg()
             for rawPath in rawPaths
         ]
         self.compressDirectory = compressDirectory
-        self.progressStatusBar = progressStatusBar
+        self.progressed = progressed
     
     def convert_to_gif(self):
-        self.progressStatusBar.show()
 
         def open_image_update_progress(path, i):
-            self.progressStatusBar.setValue(((i+1)*100)//50)
+            self.progressed.emit(((i+1)*100)//50)
             return Image.open(path)
 
         frames = [open_image_update_progress(path, i) for i, path in enumerate(self.jpegPaths)]
@@ -126,6 +125,5 @@ class RawtoGIF:
         self.compressDirectory = f"{self.compressDirectory}/{gifName}"
 
         frameOne.save(self.compressDirectory, "GIF", optimize=True, save_all=True, append_images=frames, duration=100, loop=0)
-        self.progressStatusBar.setValue(100)
-        self.progressStatusBar.hide()
+        self.progressed.emit(100)
         return self.compressDirectory

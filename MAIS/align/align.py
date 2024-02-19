@@ -3,18 +3,13 @@ import cv2
 import rawpy
 import numpy as np
 
-
-from PyQt5.QtWidgets import QMainWindow
-from images import Image
 from caching import Caching
 from constants import TIFF_CACHED_DIR
 
-# from astropy.io import fits
-
 class Align():
-    def __init__(self, filesPath, savingDirectory, processStatusBar):
+    def __init__(self, filesPath, savingDirectory, progressed):
         self.filesPath = filesPath
-        self.processStatusBar = processStatusBar
+        self.progressed = progressed
         self.savingDirectory = savingDirectory
 
         if not os.path.exists(TIFF_CACHED_DIR):
@@ -44,8 +39,11 @@ class Align():
         return outputPath
     
     def raw_to_tiffs(self):
-        self.processStatusBar.show()
-        return [self.raw_to_tiff(path) for path in self.filesPath]
+        def update_progress_and_convert(path, i):
+            self.progressed.emit(((i+1)*100)//30)
+            return self.raw_to_tiff(path)
+
+        return [update_progress_and_convert(path, i) for i, path in enumerate(self.filesPath)]
     
     def cv_mats_to_tiffs(self, alignedImages):
         for i, image, rawPath in zip(range(len(alignedImages)), alignedImages, self.filesPath):
@@ -55,15 +53,14 @@ class Align():
             print(_savingPath)
             
             cv2.imwrite(_savingPath, image)
-            self.processStatusBar.setValue(((i+1)*100)//len(alignedImages))
+            self.progressed.emit(((i)*100)//len(alignedImages)+30)
 
-        self.processStatusBar.hide()
         return self.savingDirectory
 
     
     def align(self):
         imageFiles = self.raw_to_tiffs()
-        print(f"\033[1;34m {len(imageFiles)} \033[0m")
+
         # Initialize variables
         alignedImages = []
         # set the reference image to the first image
