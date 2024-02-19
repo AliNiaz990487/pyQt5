@@ -1,12 +1,11 @@
 import sys
-from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QShortcut, QLabel
-)
+from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut, QLabel
 from PyQt5.QtGui import QKeySequence
+from PyQt5.QtCore import QThread
 from PyQt5 import uic
 
 from images import Image
-from MAIS.processing import StartProcessing
+from processing import StartProcessing
 from constants import (
     ALIGN, BLACKED, COMPRESS, GRAYED, STACK, 
     UI, VISIBLE_INDICATOR, INVISIBLE_INDICATOR
@@ -21,6 +20,7 @@ class MainWindow(QMainWindow):
         uic.loadUi(UI, self) # load UI
         
         self.image = Image(self)
+        self.processingThread = QThread()
         self.startProcessing = StartProcessing(self, self.image)
         self.secondaryLabel.setMargin(8)
         self.primaryLabel.setMargin(10)
