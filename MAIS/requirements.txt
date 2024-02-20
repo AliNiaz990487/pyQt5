@@ -1,3 +1,4 @@
+# python version >= 3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
 numpy==1.26.4
 opencv_python==4.9.0.80
 Pillow==10.2.0
