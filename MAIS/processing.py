@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox
-from PyQt5.QtCore import QObject, pyqtSignal, QThread
+from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar
+from PyQt6.QtCore import QObject, pyqtSignal, QThread
 
 from compress.compress import RawtoGIF, RawToJpeg, RawToPNG
 from images import Image
@@ -8,14 +8,14 @@ from stack.stack import Stack
 from constants import ALIGN, COMPRESS, JPEG, PNG, GIF, STACK, MEDIAN
 
 class StartProcessing:
-    def __init__(self, window, image: Image):
+    def __init__(self, window: QMainWindow, image: Image):
         if not isinstance(window, QMainWindow):
             raise ValueError("window must be of type QMainWindow")
         
         self.window = window
         self.image = image
-        self.processStatusBar = window.processStatusBar
-        self.processingThread = window.processingThread
+        self.processStatusBar:QProgressBar = window.processStatusBar
+        self.processingThread:QThread = window.processingThread
         self.worker = None
         
 
@@ -27,31 +27,26 @@ class StartProcessing:
         self.compressIndex = self.window.compressAlgorithms.currentIndex()
         self.stackIndex = self.window.stackAlgorithms.currentIndex()
         self.save_image()
-        # self.window.setEnabled(False)
 
     
     def save_image(self):
         fileDialog = QFileDialog()
-        self.savingDirectory = fileDialog.getExistingDirectoryUrl(
+        savingDirectory = fileDialog.getExistingDirectoryUrl(
             self.window, 
             "Save Images" if self.taskIndex == ALIGN else "Save Image",
         )
-        self.savingDirectory = self.savingDirectory.path()
 
         def run_task_on_thread(target):
             def show_msg(msg):
                 if msg == "error": 
-                    msg = QMessageBox()
-                    msg.setIcon(QMessageBox.Critical)
-                    msg.setText("Error")
+                    msg = QMessageBox(QMessageBox.Icon.Critical, "Error", "Erorr", QMessageBox.StandardButton.Close)
                     msg.setInformativeText('Only "tif" images can be stacked')
-                    msg.setWindowTitle("Error")
                     msg.show()
-                    msg.exec_() 
+                    msg.exec() 
                     return 
-                mb = QMessageBox(parent=self.window, text=f"{msg}")
+                mb = QMessageBox(QMessageBox.Icon.Information, "Saved", f"{msg}", QMessageBox.StandardButton.Ok)
                 mb.show()
-                mb.exec_()
+                mb.exec()
 
             if not self.processingThread.isRunning():
                 processingThread = QThread()
@@ -61,13 +56,14 @@ class StartProcessing:
                 processingThread.worker = self.worker
                 processingThread.started.connect(self.worker.run)
                 def on_thread_start():
+                    self.window.setEnabled(False)
                     self.processStatusBar.setValue(0)
                     self.processStatusBar.show()
                 self.worker.started.connect(on_thread_start)
                 
                 def on_thread_finished():
+                    self.window.setEnabled(True)
                     self.processStatusBar.hide()
-                    # self.window.setEnabled(True)
                     processingThread.quit()
                 self.worker.finished.connect(on_thread_finished)
 
@@ -76,6 +72,9 @@ class StartProcessing:
 
                 self.processingThread = processingThread
                 self.processingThread.start()
+
+        if savingDirectory:
+            self.savingDirectory = savingDirectory.path()
 
         if not self.image.filesPath or not self.savingDirectory:
             return 
