@@ -38,17 +38,17 @@ class Image:
     def browse(self):
         """Opens up browse dialog to browse for images."""
         fileDialog = QFileDialog()
-        self.clear_previous()
 
         taskIndex = self.window.taskSelection.currentIndex()
         
-        self.filesPath, _ = fileDialog.getOpenFileNames(
+        filesPath, _ = fileDialog.getOpenFileNames(
             self.window, 
             "Open RAW Images",
             filter=r"*.tif" if taskIndex == STACK else r"*.CR2"
         )
-        if not self.filesPath:
-            return
+
+        if filesPath: self.filesPath = filesPath
+        else: return
         
         self.imageIndex = len(self.filesPath)-1
         self.set_image_on_labels()
