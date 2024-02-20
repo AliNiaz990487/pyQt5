@@ -3,11 +3,13 @@ import cv2
 import rawpy
 import numpy as np
 
+from PyQt6.QtCore import pyqtBoundSignal
+
 from caching import Caching
 from constants import TIFF_CACHED_DIR
 
 class Align():
-    def __init__(self, filesPath, savingDirectory, progressed):
+    def __init__(self, filesPath: list[str], savingDirectory: str, progressed: pyqtBoundSignal):
         self.filesPath = filesPath
         self.progressed = progressed
         self.savingDirectory = savingDirectory

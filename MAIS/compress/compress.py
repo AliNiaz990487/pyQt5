@@ -1,3 +1,4 @@
+from PyQt6.QtCore import pyqtBoundSignal
 from PIL import Image
 import os
 
@@ -70,7 +71,7 @@ class RawToJpeg(Compress):
 
 
 class RawToPNG:
-    def __init__(self, rawImagePath, pngImagePath, progressed):
+    def __init__(self, rawImagePath: str, pngImagePath: str, progressed: pyqtBoundSignal):
 
         self.rawImagePath = rawImagePath
         self.pngImagePath = pngImagePath
@@ -97,7 +98,7 @@ class RawToPNG:
 
 
 class RawtoGIF:
-    def __init__(self, rawPaths, compressDirectory, progressed):
+    def __init__(self, rawPaths: list[str], compressDirectory: str, progressed: pyqtBoundSignal):
         print("#"*100)
         self.jpegPaths = [
             RawToJpeg(rawPath).convert_to_jpeg()

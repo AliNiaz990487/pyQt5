@@ -1,20 +1,9 @@
 import os
-from PyQt5.QtWidgets import QMainWindow, QFileDialog
-from PyQt5.QtGui import QPixmap
+from PyQt6.QtWidgets import QMainWindow, QFileDialog, QLabel
+from PyQt6.QtGui import QPixmap
 
 from compress.compress import RawToJpeg
 from constants import PLACEHOLDER_IMAGE, STACK
-
-def calculate_aspect(width: int, height: int) -> str:
-    def gcd(a, b):
-        """The GCD (greatest common divisor) is the highest number that evenly divides both width and height."""
-        return a if b == 0 else gcd(b, a % b)
-
-    r = gcd(width, height)
-    x = int(width / r)
-    y = int(height / r)
-
-    return {"width": x, "height": y}
 
 
 class Image:
@@ -71,11 +60,11 @@ class Image:
         jpeg = RawToJpeg(self.filesPath[index]).convert_to_jpeg()
         image = QPixmap(jpeg)
         
-        pl = self.window.primaryLabel
-        sl = self.window.secondaryLabel
+        pl:QLabel = self.window.primaryLabel
+        sl:QLabel = self.window.secondaryLabel
         imageName = os.path.split(self.filesPath[index])[-1]
-        pl.setPixmap(image.scaled(pl.size(), aspectRatioMode=True))
-        sl.setPixmap(image.scaled(sl.size(), aspectRatioMode=True))
+        pl.setPixmap(image.scaled(pl.size()))
+        sl.setPixmap(image.scaled(sl.size()))
         self.window.imageName.setText(imageName)
 
     def next_image(self):

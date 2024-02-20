@@ -1,8 +1,8 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut, QLabel
-from PyQt5.QtGui import QKeySequence
-from PyQt5.QtCore import QThread
-from PyQt5 import uic
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt6.QtGui import QKeySequence, QShortcut
+from PyQt6.QtCore import QThread
+from PyQt6 import uic
 
 from images import Image
 from processing import StartProcessing
@@ -96,5 +96,5 @@ mainWindow = MainWindow() # instantiate the app
 
 
 mainWindow.show() # show the main window
-sys.exit(app.exec_())
+sys.exit(app.exec())
 

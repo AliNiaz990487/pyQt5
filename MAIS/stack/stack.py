@@ -1,9 +1,11 @@
+from PyQt6.QtCore import pyqtBoundSignal
+
 import numpy as np
 import cv2 as cv
 import os
 
 class Stack:
-    def __init__(self, filesPath, savingDirectory, progressed):
+    def __init__(self, filesPath: list[str], savingDirectory: str, progressed: pyqtBoundSignal):
         self.filesPath = filesPath
         self.savingDirectory = savingDirectory
         self.progressed = progressed
@@ -29,7 +31,7 @@ class Stack:
         alignedImages = np.array(alignedImages)
 
         # Stack the aligned images together using a median filter
-        medianImage = np.median(alignedImages, axis=0)
+        medianImage:np = np.median(alignedImages, axis=0)
         medianImage = medianImage[5:-5, 5:-5]
         self.progressed.emit(70)
 
